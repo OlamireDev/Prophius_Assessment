@@ -1,5 +1,7 @@
 package com.olamireDev.prophiusapi.entity;
 
+import com.olamireDev.prophiusapi.payload.response.CommentDTO;
+import com.olamireDev.prophiusapi.payload.response.PostDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -27,5 +30,6 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdAt;
     @OneToMany
-    private List<Comment> comments;
+    private List<Comment> comments = new LinkedList<>();
+
 }
