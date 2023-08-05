@@ -14,9 +14,11 @@ import com.olamireDev.prophiusapi.repository.UserRepository;
 import com.olamireDev.prophiusapi.service.PostService;
 import com.olamireDev.prophiusapi.util.ContextEmail;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @AllArgsConstructor
 public class PostServiceImpl implements PostService {
 

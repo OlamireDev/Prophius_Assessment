@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -29,6 +30,6 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdAt;
     @OneToMany
-    private List<Comment> comments;
+    private List<Comment> comments = new LinkedList<>();
 
 }

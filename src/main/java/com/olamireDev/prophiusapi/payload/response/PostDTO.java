@@ -4,6 +4,7 @@ import com.olamireDev.prophiusapi.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -16,7 +17,10 @@ public class PostDTO {
     private List<CommentDTO> comments;
 
     public static PostDTO mapToDTO(Post post) {
-        var commentDTOs = post.getComments().stream().map(CommentDTO::commentDTOBuilder).toList();
+        List<CommentDTO> commentDTOs = new LinkedList<>();
+        if(post.getComments() != null) {
+            commentDTOs = post.getComments().stream().map(CommentDTO::commentDTOBuilder).toList();
+        }
         return new PostDTO(post.getId(), post.getContent(), post.getCreatedBy().getUsername(), post.getLikeCount(), commentDTOs);
     }
 
