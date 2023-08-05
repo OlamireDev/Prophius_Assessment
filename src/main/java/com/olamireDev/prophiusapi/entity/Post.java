@@ -1,5 +1,7 @@
 package com.olamireDev.prophiusapi.entity;
 
+import com.olamireDev.prophiusapi.payload.response.CommentDTO;
+import com.olamireDev.prophiusapi.payload.response.PostDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,4 +30,5 @@ public class Post {
     private LocalDateTime createdAt;
     @OneToMany
     private List<Comment> comments;
+
 }
