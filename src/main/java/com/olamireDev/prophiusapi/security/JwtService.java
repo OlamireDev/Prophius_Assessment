@@ -59,6 +59,17 @@ public class JwtService implements Serializable {
                 .compact();
     }
 
+    public void invalidateToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(adminKey).parseClaimsJws(token).getBody();
+
+        claims.setExpiration(new Date(System.currentTimeMillis() - 1000));
+
+        // If you're using a JWT library, you might need to create a new token
+        // based on the modified claims and send it back to the client.
+
+        // Additionally, remove the token from storage (e.g., database, cache).
+    }
+
     //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);

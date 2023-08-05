@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -118,7 +119,7 @@ public class UserServiceImpl implements UserService {
         var requestingUser = userRepository.findByEmail(ContextEmail.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("user details not fund"));
         commentRepository.deleteAllByCommentedBy(requestingUser);
-        postRepository.deleteAllByCreatedBy(requestingUser);
+        postRepository.deleteAll(postRepository.findAllByCreatedBy(requestingUser));
         userRepository.delete(requestingUser);
         return "Successfully deleted "+ requestingUser.getUsername();
     }
