@@ -14,8 +14,8 @@ public interface CommentService {
 
     List<CommentDTO> getPostComments(Long postId) throws PostNotFoundException;
 
-    String updateComment(EditCommentDTO editCommentDTO) throws CommentNotFoundException;
+    String updateComment(EditCommentDTO editCommentDTO) throws CommentNotFoundException, UserNotFoundException;
 
-    String deleteComment(Long commentId) throws CommentNotFoundException;
+    String deleteComment(Long commentId) throws CommentNotFoundException, UserNotFoundException;
 
 }

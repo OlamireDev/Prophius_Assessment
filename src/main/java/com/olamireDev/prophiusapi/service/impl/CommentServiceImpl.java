@@ -42,19 +42,27 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public String updateComment(EditCommentDTO editCommentDTO) throws CommentNotFoundException {
+    public String updateComment(EditCommentDTO editCommentDTO) throws CommentNotFoundException, UserNotFoundException {
+        var user = userRepository.findByEmail(ContextEmail.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("user details not fund"));
         var comment = commentRepository.findById(editCommentDTO.CommentId()).orElseThrow(() -> new CommentNotFoundException("comment not found"));
-        if(editCommentDTO.content() != null && !editCommentDTO.content().isEmpty()){
+        if(comment.getCommentedBy() == user){
             comment.setContent(editCommentDTO.content());
             commentRepository.save(comment);
             return "comment updated";
         }
-        return "comment not updated, because content is empty";
+        return "It is not your place to edit this comment";
     }
 
     @Override
-    public String deleteComment(Long commentId) throws CommentNotFoundException {
-        commentRepository.delete(commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("comment not found")));
-        return "comment deleted";
+    public String deleteComment(Long commentId) throws CommentNotFoundException, UserNotFoundException {
+        var user = userRepository.findByEmail(ContextEmail.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("user details not fund"));
+        var comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentNotFoundException("comment not found"));
+        if(comment.getCommentedBy() == user){
+            commentRepository.delete(comment);
+            return "comment deleted";
+        }
+        return "It is not your place to delete this comment";
     }
 }

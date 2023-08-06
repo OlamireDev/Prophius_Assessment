@@ -2,11 +2,13 @@ package com.olamireDev.prophiusapi.service.impl;
 
 import com.olamireDev.prophiusapi.entity.Comment;
 import com.olamireDev.prophiusapi.entity.Post;
+import com.olamireDev.prophiusapi.enums.PostSortingParameter;
 import com.olamireDev.prophiusapi.exception.InvalidOperationException;
 import com.olamireDev.prophiusapi.exception.PostNotFoundException;
 import com.olamireDev.prophiusapi.exception.UserNotFoundException;
 import com.olamireDev.prophiusapi.payload.request.CreatePostDTO;
 import com.olamireDev.prophiusapi.payload.request.EditPostDTO;
+import com.olamireDev.prophiusapi.payload.request.PostPageRequestDTO;
 import com.olamireDev.prophiusapi.payload.response.PostDTO;
 import com.olamireDev.prophiusapi.repository.CommentRepository;
 import com.olamireDev.prophiusapi.repository.PostRepository;
@@ -14,6 +16,10 @@ import com.olamireDev.prophiusapi.repository.UserRepository;
 import com.olamireDev.prophiusapi.service.PostService;
 import com.olamireDev.prophiusapi.util.ContextEmail;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -73,5 +79,26 @@ public class PostServiceImpl implements PostService {
             return "Post deleted";
         }
         throw new InvalidOperationException("Wow, you cannot delete a post you did not create, its sad");
+    }
+
+    @Override
+    public Page<PostDTO> getAllPostPaged(PostPageRequestDTO pageRequest) throws UserNotFoundException {
+        var user = userRepository.findById(pageRequest.userId())
+                .orElseThrow(() -> new UserNotFoundException("user details not fund"));
+        Pageable paging = PageRequest.of(pageRequest.pageNumber() < 0? 0: pageRequest.pageNumber(), pageRequest.pageSize() < 1? 1: pageRequest.pageSize());
+        Page<Post> posts = null;
+        if(pageRequest.sorted()){
+            switch(pageRequest.parameter()){
+                case DATE_ASC -> posts = postRepository.findAllByCreatedByOrderByCreatedAtAsc(user, paging);
+
+                case DATE_DESC -> posts = postRepository.findAllByCreatedByOrderByCreatedAtDesc(user, paging);
+                case LIKES_ASC -> posts = postRepository.findAllByCreatedByOrderByLikeCountAsc(user, paging);
+                case LIKES_DESC -> posts = postRepository.findAllByCreatedByOrderByLikeCountDesc(user, paging);
+            }
+        }else{
+            posts = postRepository.findAllByCreatedBy(user, paging);
+        }
+        var postDTOs = posts.stream().map(PostDTO::mapToDTO).toList();
+        return new PageImpl(postDTOs, paging, posts.getTotalElements());
     }
 }

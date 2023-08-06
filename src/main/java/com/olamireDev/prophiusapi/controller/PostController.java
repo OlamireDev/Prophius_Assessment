@@ -5,9 +5,11 @@ import com.olamireDev.prophiusapi.exception.PostNotFoundException;
 import com.olamireDev.prophiusapi.exception.UserNotFoundException;
 import com.olamireDev.prophiusapi.payload.request.CreatePostDTO;
 import com.olamireDev.prophiusapi.payload.request.EditPostDTO;
+import com.olamireDev.prophiusapi.payload.request.PostPageRequestDTO;
 import com.olamireDev.prophiusapi.payload.response.PostDTO;
 import com.olamireDev.prophiusapi.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +35,11 @@ public class PostController {
     @GetMapping("/all/{userId}")
     public ResponseEntity<List<PostDTO>> getAllPosts(@PathVariable Long userId) throws UserNotFoundException {
         return ResponseEntity.ok(postService.getAllPosts(userId));
+    }
+
+    @GetMapping("/all/paged")
+    public ResponseEntity<Page<PostDTO>> getAllPostPaged(@RequestBody PostPageRequestDTO pageRequest) throws UserNotFoundException {
+        return ResponseEntity.ok(postService.getAllPostPaged(pageRequest));
     }
 
     @PutMapping("/update")
