@@ -1,5 +1,6 @@
 package com.olamireDev.prophiusapi.service.impl;
 
+import com.olamireDev.prophiusapi.entity.Comment;
 import com.olamireDev.prophiusapi.exception.CommentNotFoundException;
 import com.olamireDev.prophiusapi.exception.PostNotFoundException;
 import com.olamireDev.prophiusapi.exception.UserNotFoundException;
@@ -54,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
     public String updateComment(EditCommentDTO editCommentDTO) throws CommentNotFoundException, UserNotFoundException {
         var user = userRepository.findByEmail(ContextEmail.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("user details not fund"));
-        var comment = commentRepository.findById(editCommentDTO.commentId()).orElseThrow(() -> new CommentNotFoundException("comment not found"));
+        var comment = commentRepository.findById(editCommentDTO.postOrCommentId()).orElseThrow(() -> new CommentNotFoundException("comment not found"));
         System.out.println(comment);
         if(comment.getCommentedBy() == user){
             comment.setContent(editCommentDTO.content());
