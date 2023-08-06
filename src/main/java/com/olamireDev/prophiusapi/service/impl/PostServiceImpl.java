@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService {
     public PostDTO createPost(CreatePostDTO createPostDTO) throws UserNotFoundException {
         var user = userRepository.findByEmail(ContextEmail.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("user details not fund"));
-        var post = Post.builder().content(createPostDTO.content()).createdBy(user).build();
+        var post = Post.builder().title(createPostDTO.title()).content(createPostDTO.content()).createdBy(user).build();
         post  = postRepository.save(post);
         return PostDTO.mapToDTO(post);
     }
@@ -59,7 +59,8 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new UserNotFoundException("user details not fund"));
         var post = postRepository.findById(editPostDTO.id()).orElseThrow(() -> new PostNotFoundException("post not found"));
         if(post.getCreatedBy() == user){
-            post.setContent(editPostDTO.content());
+            if(editPostDTO.title() != null && !editPostDTO.title().isEmpty()) post.setTitle(editPostDTO.title());
+            if(editPostDTO.content() != null && !editPostDTO.content().isEmpty()) post.setContent(editPostDTO.content());
             postRepository.save(post);
             return "Post updated";
         }

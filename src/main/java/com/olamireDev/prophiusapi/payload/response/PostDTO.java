@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PostDTO {
     private Long id;
+    private String title;
     private String content;
     private String username;
     private int likes;
@@ -21,7 +22,7 @@ public class PostDTO {
         if(post.getComments() != null) {
             commentDTOs = post.getComments().stream().map(CommentDTO::commentDTOBuilder).toList();
         }
-        return new PostDTO(post.getId(), post.getContent(), post.getCreatedBy().getUsername(), post.getLikeCount(), commentDTOs);
+        return new PostDTO(post.getId(), post.getTitle(), post.getContent(), post.getCreatedBy().getUsername(), post.getLikeCount(), commentDTOs);
     }
 
 }

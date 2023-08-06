@@ -1,4 +1,4 @@
 package com.olamireDev.prophiusapi.payload.request;
 
-public record EditCommentDTO(Long CommentId, String content) {
+public record EditCommentDTO(Long commentId, String content) {
 }
