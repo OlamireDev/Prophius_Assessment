@@ -35,11 +35,6 @@ public class PostController {
         return ResponseEntity.ok(postService.getAllPosts(userId));
     }
 
-    @PutMapping("/like/{id}")
-    public ResponseEntity<String> likePost(@PathVariable Long id) throws UserNotFoundException, PostNotFoundException, InvalidOperationException {
-        return ResponseEntity.ok(postService.likePost(id));
-    }
-
     @PutMapping("/update")
     public ResponseEntity<String> updatePost(@RequestBody EditPostDTO editPostDTO) throws UserNotFoundException, PostNotFoundException, InvalidOperationException {
         return ResponseEntity.ok(postService.updatePost(editPostDTO));
