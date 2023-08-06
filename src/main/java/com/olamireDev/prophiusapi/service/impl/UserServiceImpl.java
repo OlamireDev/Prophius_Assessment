@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
     public String deleteUser() throws UserNotFoundException {
         var requestingUser = userRepository.findByEmail(ContextEmail.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("user details not fund"));
-        commentRepository.deleteAllByCommentedBy(requestingUser);
+        commentRepository.deleteAll(commentRepository.findAllByCommentedBy(requestingUser));
         postRepository.deleteAll(postRepository.findAllByCreatedBy(requestingUser));
         userRepository.delete(requestingUser);
         return "Successfully deleted "+ requestingUser.getUsername();
