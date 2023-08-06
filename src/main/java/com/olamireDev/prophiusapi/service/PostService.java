@@ -13,7 +13,6 @@ public interface PostService {
     PostDTO createPost(CreatePostDTO createPostDTO) throws UserNotFoundException;
     PostDTO getPost(Long id) throws PostNotFoundException;
     List<PostDTO> getAllPosts(Long userId) throws UserNotFoundException;
-    String likePost(Long id) throws PostNotFoundException, UserNotFoundException, InvalidOperationException;
     String updatePost(EditPostDTO editPostDTO) throws UserNotFoundException, PostNotFoundException, InvalidOperationException;
     String deletePost(Long id) throws UserNotFoundException, PostNotFoundException, InvalidOperationException;
 }
