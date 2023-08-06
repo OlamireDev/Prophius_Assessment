@@ -45,6 +45,7 @@ public class CommentServiceImpl implements CommentService {
         var user = userRepository.findByEmail(ContextEmail.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("user details not fund"));
         var comment = commentRepository.findById(editCommentDTO.commentId()).orElseThrow(() -> new CommentNotFoundException("comment not found"));
+        System.out.println(comment);
         if(comment.getCommentedBy() == user){
             comment.setContent(editCommentDTO.content());
             commentRepository.save(comment);

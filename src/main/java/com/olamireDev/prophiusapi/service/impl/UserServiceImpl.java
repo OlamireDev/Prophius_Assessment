@@ -57,17 +57,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CreatedUserDTO loginUser(LoginDTO loginDTO) throws AuthorizationException, UserNotFoundException {
-        Authentication auth= authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password()));
-        if(auth.isAuthenticated()){
-            String token = "Bearer " + JwtService.generateToken
-                    (new org.springframework.security.core.userdetails.User(loginDTO.email(), loginDTO.password(),
-                            new ArrayList<>()));
-            User user = userRepository.findByEmail(loginDTO.email()).orElseThrow(()-> new UserNotFoundException("User doesnt exist"));
-            return CreatedUserDTO.builder().id(user.getId()).userName(user.getUsername()).token(token).build();
-        }else{
-            throw new AuthorizationException("Email or password Not Authenticated ");
-        }
+    public CreatedUserDTO loginUser(LoginDTO loginDTO) throws UserNotFoundException {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password()));
+        String token = "Bearer " + JwtService.generateToken
+                (new org.springframework.security.core.userdetails.User(loginDTO.email(), loginDTO.password(),
+                        new ArrayList<>()));
+        User user = userRepository.findByEmail(loginDTO.email()).orElseThrow(()-> new UserNotFoundException("User doesnt exist"));
+        return CreatedUserDTO.builder().id(user.getId()).userName(user.getUsername()).token(token).build();
     }
 
     @Override
@@ -96,6 +92,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("user details not fund"));
         var targetUser = userRepository.findById(id)
                 .orElseThrow(()-> new UsernameNotFoundException("Target user Not found"));
+        if(requestingUser.getId().equals(targetUser.getId())){
+            throw new BadRequestException("You cannot follow/unfollow yourself");
+        }
         if(follow && !targetUser.getFollowers().contains(requestingUser)){
             targetUser.getFollowers().add(requestingUser);
             requestingUser.getFollowing().add(targetUser);

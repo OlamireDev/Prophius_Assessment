@@ -12,7 +12,7 @@ import com.olamireDev.prophiusapi.payload.response.CreatedUserDTO;
 public interface UserService {
 
     CreatedUserDTO createUser(CreateUserDTO createUserDTO) throws ExistingEmailException;
-    CreatedUserDTO loginUser (LoginDTO loginDTO) throws AuthorizationException, UserNotFoundException;
+    CreatedUserDTO loginUser (LoginDTO loginDTO) throws UserNotFoundException;
     String editUser(EditUserDTO editUserDTO) throws UserNotFoundException;
     String followUnfollow(Long id, boolean follow) throws UserNotFoundException, BadRequestException;
     String deleteUser() throws UserNotFoundException;

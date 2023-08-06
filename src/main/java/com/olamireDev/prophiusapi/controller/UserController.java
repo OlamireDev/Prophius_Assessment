@@ -25,8 +25,8 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(createUserDTO));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<CreatedUserDTO> loginUser(@RequestBody LoginDTO loginDTO) throws UserNotFoundException, AuthorizationException {
+    @GetMapping("/login")
+    public ResponseEntity<CreatedUserDTO> loginUser(@RequestBody LoginDTO loginDTO) throws UserNotFoundException{
         return ResponseEntity.ok(userService.loginUser(loginDTO));
     }
 
