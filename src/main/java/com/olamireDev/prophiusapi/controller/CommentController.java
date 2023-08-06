@@ -19,6 +19,10 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
+    @PostMapping("/create")
+    public ResponseEntity<CommentDTO> createComment(@RequestBody EditCommentDTO editCommentDTO) throws Exception {
+        return ResponseEntity.ok(commentService.createComment(editCommentDTO));
+    }
 
     @GetMapping("/{commentId}")
     public ResponseEntity<CommentDTO> getComment(@PathVariable long commentId) throws Exception {

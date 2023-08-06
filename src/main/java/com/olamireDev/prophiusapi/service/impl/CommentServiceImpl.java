@@ -27,6 +27,16 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     CommentRepository commentRepository;
 
+    @Override
+    public CommentDTO createComment(EditCommentDTO editCommentDTO) throws PostNotFoundException, UserNotFoundException {
+        var user = userRepository.findByEmail(ContextEmail.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("user details not fund"));
+        var post = postRepository.findById(editCommentDTO.postOrCommentId())
+                .orElseThrow(() -> new PostNotFoundException("post not found"));
+        var comment = Comment.builder().content(editCommentDTO.content()).commentedBy(user).post(post).build();
+        comment = commentRepository.save(comment);
+        return CommentDTO.commentDTOBuilder(comment);
+    }
 
     @Override
     public CommentDTO getComment(Long commentId) throws CommentNotFoundException {
