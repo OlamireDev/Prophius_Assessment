@@ -6,6 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 @ToString
 public class EditUserDTO {
 

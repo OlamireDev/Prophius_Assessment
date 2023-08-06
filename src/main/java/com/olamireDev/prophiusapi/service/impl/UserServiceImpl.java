@@ -16,6 +16,7 @@ import com.olamireDev.prophiusapi.security.JwtService;
 import com.olamireDev.prophiusapi.service.UserService;
 import com.olamireDev.prophiusapi.util.ContextEmail;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,17 +28,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-
-    private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
-    private final JwtService jwtService;
-
-    private final PasswordEncoder passwordEncoder;
-
-    private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
+    @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    JwtService jwtService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    @Autowired
+    PostRepository postRepository;
+    @Autowired
+    CommentRepository commentRepository;
 
     @Override
     public CreatedUserDTO createUser(CreateUserDTO createUserDTO) throws ExistingEmailException {
@@ -70,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String editUser(EditUserDTO editUserDTO) throws UserNotFoundException {
         List<String> changed = new ArrayList<>();
-        var user = userRepository.findByEmail(ContextEmail.getEmail())
+        var user = userRepository.findByEmail(getEmail())
                 .orElseThrow(() -> new UserNotFoundException("user details not fund"));
         if(editUserDTO.getUserName() !=null){
             user.setUsername(editUserDTO.getUserName());
@@ -96,16 +99,12 @@ public class UserServiceImpl implements UserService {
         if(follow && !targetUser.getFollowers().contains(requestingUser)){
             targetUser.getFollowers().add(requestingUser);
             requestingUser.getFollowing().add(targetUser);
-            System.out.println(requestingUser.getFollowing().size());
-            System.out.println(targetUser.getFollowers().size());
             userRepository.save(targetUser);
             userRepository.save(requestingUser);
             return "Successfully followed user";
         }else if(!follow && targetUser.getFollowers().contains(requestingUser)){
             targetUser.getFollowers().remove(requestingUser);
             requestingUser.getFollowing().remove(targetUser);
-            System.out.println(requestingUser);
-            System.out.println(targetUser);
             userRepository.save(targetUser);
             userRepository.save(requestingUser);
             return "Successfully unfollowed user";
@@ -122,5 +121,9 @@ public class UserServiceImpl implements UserService {
         postRepository.deleteAll(postRepository.findAllByCreatedBy(requestingUser));
         userRepository.delete(requestingUser);
         return "Successfully deleted "+ requestingUser.getUsername();
+    }
+
+    public String getEmail(){
+        return ContextEmail.getEmail();
     }
 }

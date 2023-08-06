@@ -1,8 +1,6 @@
 package com.olamireDev.prophiusapi.service.impl;
 
-import com.olamireDev.prophiusapi.entity.Comment;
 import com.olamireDev.prophiusapi.entity.Post;
-import com.olamireDev.prophiusapi.enums.PostSortingParameter;
 import com.olamireDev.prophiusapi.exception.InvalidOperationException;
 import com.olamireDev.prophiusapi.exception.PostNotFoundException;
 import com.olamireDev.prophiusapi.exception.UserNotFoundException;
