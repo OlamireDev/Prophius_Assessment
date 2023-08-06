@@ -48,6 +48,18 @@ public class PostServiceImpl implements PostService {
         return posts.stream().map(PostDTO::mapToDTO).toList();
     }
 
+    @Override
+    public String likePost(Long id) throws PostNotFoundException, UserNotFoundException, InvalidOperationException {
+        var user = userRepository.findByEmail(ContextEmail.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("user details not fund"));
+        var post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("post not found"));
+        if(post.getCreatedBy() != user){
+            post.setLikeCount(post.getLikeCount() + 1);
+            postRepository.save(post);
+            return "Post liked";
+        }
+        throw new InvalidOperationException("you cannot like your own post, its sad");
+    }
 
     @Override
     public String updatePost(EditPostDTO editPostDTO) throws UserNotFoundException, PostNotFoundException, InvalidOperationException {

@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface CommentService {
 
+    CommentDTO createComment(EditCommentDTO editCommentDTO) throws PostNotFoundException, UserNotFoundException;
+
     CommentDTO getComment(Long commentId) throws UserNotFoundException, CommentNotFoundException;
 
     List<CommentDTO> getPostComments(Long postId) throws PostNotFoundException;
