@@ -92,7 +92,9 @@ public class PostServiceImpl implements PostService {
                 case DATE_ASC -> posts = postRepository.findAllByCreatedByOrderByCreatedAtAsc(user, paging);
 
                 case DATE_DESC -> posts = postRepository.findAllByCreatedByOrderByCreatedAtDesc(user, paging);
+
                 case LIKES_ASC -> posts = postRepository.findAllByCreatedByOrderByLikeCountAsc(user, paging);
+
                 case LIKES_DESC -> posts = postRepository.findAllByCreatedByOrderByLikeCountDesc(user, paging);
             }
         }else{
